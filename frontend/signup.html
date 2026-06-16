@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — PadPick</title>
+  <link rel="stylesheet" href="/frontend/css/login_split.css">
+</head>
+<body>
+
+  <!-- LEFT: brand panel -->
+  <div class="panel-left">
+    <div class="panel-brand">
+      <a class="logo" href="/">Pad<span>Pick</span></a>
+
+      <div>
+        <div class="brand-copy">
+          <div class="brand-tag">✦ Join PadPick</div>
+          <h2>Your next<br><em>home</em> awaits.</h2>
+          <p>Create an account and start browsing hundreds of verified rental listings today.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: signup form -->
+  <div class="panel-right">
+    <div class="form-box">
+
+      <div class="form-header">
+        <h1>Create account</h1>
+        <p>Fill in your details to get started with PadPick</p>
+      </div>
+
+      <form id="signupForm">
+
+        <div class="input-grid">
+
+          <div class="input-box full">
+            <label>Full Name</label>
+            <div class="input-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="username" placeholder="Your full name" required />
+            </div>
+          </div>
+
+          <div class="input-box full">
+            <label>Email Address</label>
+            <div class="input-wrap">
+              <span class="input-icon">✉</span>
+              <input type="email" id="email" placeholder="you@padpick.com" pattern=".+@padpick\.com" title="Email must end with @padpick.com" required />
+            </div>
+          </div>
+
+          <div class="input-box full">
+            <label>Mobile Number</label>
+            <div class="input-wrap">
+              <span class="input-icon">📞</span>
+              <input type="tel" id="mobile_number" placeholder="Enter mobile number" required />
+            </div>
+          </div>
+
+          <div class="input-box full">
+            <label>Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="password" placeholder="Create a strong password" required minlength="6" />
+            </div>
+          </div>
+
+          <div class="input-box full">
+            <label>Confirm Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="confirm_password" placeholder="Confirm your password" required minlength="6" />
+            </div>
+          </div>
+
+        </div>
+
+        <hr class="form-divider">
+
+        <button type="submit" class="btn" id="signupBtn">Create Account</button>
+
+        <p id="message"></p>
+
+      </form>
+
+      <p class="login-text">
+        Already have an account? <a href="/frontend/login.html">Login</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script src="/frontend/js/auth.js"></script>
+  <script>
+    const form = document.getElementById("signupForm");
+    const signupBtn = document.getElementById("signupBtn");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const fullName = document.getElementById("username").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const mobileNumber = document.getElementById("mobile_number").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirm_password").value;
+
+      message.innerText = "";
+      message.style.color = "red";
+
+      // Enforce email domain ending in javascript as secondary validation
+      if (!email.toLowerCase().endsWith("@padpick.com")) {
+        message.innerText = "Email address must end with @padpick.com";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        message.innerText = "Passwords do not match.";
+        return;
+      }
+
+      // 🔒 loading state
+      signupBtn.disabled = true;
+      signupBtn.innerText = "Creating...";
+      signupBtn.style.opacity = "0.7";
+
+      try {
+        const result = await registerUser(email, fullName, password, mobileNumber);
+
+        if (!result.success) {
+          message.innerText = result.error || "Registration failed. Email must be unique and end with @padpick.com";
+          resetButton();
+          return;
+        }
+
+        message.style.color = "green";
+        message.innerText = "Account created successfully ✅";
+
+        setTimeout(() => {
+          window.location.href = "/frontend/login.html";
+        }, 1200);
+
+      } catch (err) {
+        console.error("Signup error:", err);
+        message.innerText = "Network error. Please try again.";
+        resetButton();
+      }
+    });
+
+    function resetButton() {
+      signupBtn.disabled = false;
+      signupBtn.innerText = "Create Account";
+      signupBtn.style.opacity = "1";
+    }
+  </script>
+
+</body>
+</html>

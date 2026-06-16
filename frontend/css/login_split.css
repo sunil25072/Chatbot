@@ -1,0 +1,357 @@
+/* Premium Dark Split Panel Styling for Login & Signup Pages - PadPick */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Match PadPick Main Design System Tokens */
+  --bg-darker: #080b11;
+  --bg-dark: #0f1524;
+  --bg-card: rgba(23, 32, 54, 0.6);
+  --primary: #6366f1; /* Indigo */
+  --primary-glow: rgba(99, 102, 241, 0.3);
+  --accent: #10b981; /* Emerald */
+  --accent-light: #6ee7b7;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(99, 102, 241, 0.4);
+  --font-primary: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+  font-family: var(--font-primary);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: var(--bg-darker);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+}
+
+@media (max-width: 900px) {
+  body {
+    grid-template-columns: 1fr;
+  }
+  .panel-left {
+    display: none;
+  }
+  .panel-right {
+    padding: 3rem 1.5rem;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .panel-right {
+    padding: 1rem !important;
+  }
+  .form-box {
+    padding: 2rem 1.25rem !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+  }
+  .form-header h1 {
+    font-size: 24px !important;
+    margin-bottom: 6px !important;
+  }
+  .form-header {
+    margin-bottom: 24px !important;
+  }
+  .input-group, .input-box {
+    margin-bottom: 16px !important;
+  }
+  .input-wrap input {
+    padding: 12px 14px 12px 40px !important;
+    font-size: 13px !important;
+  }
+  .input-icon {
+    left: 14px !important;
+    font-size: 14px !important;
+  }
+  .btn {
+    padding: 12px !important;
+    font-size: 14px !important;
+  }
+  .signup-link, .login-text {
+    margin-top: 20px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* ── LEFT PANEL — visual ── */
+.panel-left {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-darker);
+  border-right: 1px solid var(--border-color);
+}
+
+.panel-left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("/frontend/images/luxury_villa_banner.png");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.35;
+}
+
+.panel-left::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(8, 11, 17, 0.4) 0%,
+    rgba(8, 11, 17, 0.85) 100%
+  );
+}
+
+.panel-brand {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 44px 48px;
+}
+
+.logo {
+  font-family: var(--font-primary);
+  font-size: 28px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: -0.5px;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo span {
+  color: var(--text-secondary);
+  -webkit-text-fill-color: var(--text-secondary);
+}
+
+.brand-copy {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.brand-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.brand-copy h2 {
+  font-family: var(--font-primary);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 900;
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 15px;
+  letter-spacing: -1px;
+}
+
+.brand-copy h2 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-copy p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  max-width: 440px;
+}
+
+/* ── RIGHT PANEL — form ── */
+.panel-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.form-box {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.form-header {
+  margin-bottom: 35px;
+  text-align: left;
+}
+
+.form-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.form-header p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* Forms input styling */
+.input-group, .input-box {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label, .input-box label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  font-size: 16px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.input-wrap input {
+  width: 100%;
+  padding: 14px 16px 14px 44px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background-color: rgba(8, 11, 17, 0.6);
+  color: white;
+  font-size: 14px;
+  font-family: var(--font-primary);
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.input-wrap input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  background-color: rgba(8, 11, 17, 0.8);
+}
+
+/* For signup input grid */
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.input-grid .full {
+  grid-column: span 2;
+}
+
+@media (max-width: 480px) {
+  .input-grid {
+    grid-template-columns: 1fr;
+  }
+  .input-grid .full {
+    grid-column: span 1;
+  }
+}
+
+.form-divider {
+  border: 0;
+  height: 1px;
+  background: var(--border-color);
+  margin: 24px 0;
+}
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary), #4f46e5);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px var(--primary-glow);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.signup-link, .login-text {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.signup-link a, .login-text a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.signup-link a:hover, .login-text a:hover {
+  border-color: var(--primary);
+}
+
+#message {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  min-height: 20px;
+}

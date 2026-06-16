@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — PadPick</title>
+  <link rel="stylesheet" href="/frontend/css/login_split.css">
+</head>
+<body>
+
+  <!-- LEFT: brand panel -->
+  <div class="panel-left">
+    <div class="panel-brand">
+      <a class="logo" href="/">Pad<span>Pick</span></a>
+
+      <div>
+        <div class="brand-copy">
+          <div class="brand-tag">✦ Premium Rentals</div>
+          <h2>Find your<br>perfect <em>Stay.</em></h2>
+          <p>Browse curated properties, connect with landlords, and move in with confidence.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: login form -->
+  <div class="panel-right">
+    <div class="form-box">
+
+      <div class="form-header">
+        <h1>Welcome back</h1>
+        <p>Sign in to your PadPick account to continue</p>
+      </div>
+
+      <form id="loginForm">
+
+        <div class="input-group">
+          <label>Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉</span>
+            <input type="email" id="email" placeholder="you@email.com" required>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" placeholder="Enter your password" required>
+          </div>
+        </div>
+
+        <hr class="form-divider">
+
+        <button type="submit" class="btn" id="loginBtn">Login</button>
+
+        <p id="message"></p>
+
+      </form>
+
+      <p class="signup-link">
+        Don't have an account? <a href="/frontend/signup.html">Sign up</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script src="/frontend/js/auth.js"></script>
+  <script>
+    const form = document.getElementById("loginForm");
+    const loginBtn = document.getElementById("loginBtn");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      message.innerText = "";
+      message.style.color = "red";
+
+      // 🔒 disable + loading text
+      loginBtn.disabled = true;
+      loginBtn.innerText = "Logging in...";
+      loginBtn.style.opacity = "0.7";
+      loginBtn.style.cursor = "not-allowed";
+
+      try {
+        const success = await loginUser(email, password);
+
+        if (!success) {
+          // Toast handles the feedback, but let's also update the message label for exact styling parity
+          message.innerText = "Invalid email or password";
+          resetButton();
+          return;
+        }
+
+        // ✅ login success
+        message.style.color = "green";
+        message.innerText = "Login successful ✅";
+
+        setTimeout(() => {
+          window.location.href = "/frontend/dashboard.html";
+        }, 1000);
+
+      } catch (error) {
+        console.error(error);
+        message.innerText = "Backend not reachable";
+        resetButton();
+      }
+    });
+
+    function resetButton() {
+      loginBtn.disabled = false;
+      loginBtn.innerText = "Login";
+      loginBtn.style.opacity = "1";
+      loginBtn.style.cursor = "pointer";
+    }
+  </script>
+
+</body>
+</html>

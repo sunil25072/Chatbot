@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PadPick - Premium Rental Homes Marketplace</title>
+    <link rel="stylesheet" href="/frontend/css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            PadPick<span>.</span>
+        </a>
+        
+        <div class="nav-links" id="nav-actions">
+            <!-- Dynamic Actions inserted here by JS -->
+            <a href="/frontend/login.html" class="nav-link">Log In</a>
+            <a href="/frontend/signup.html" class="btn btn-primary">Sign Up</a>
+        </div>
+    </nav>
+
+    <!-- Landing Hero Section with Banner -->
+    <header class="landing-hero">
+        <div class="landing-hero-bg" style="background-image: url('/frontend/images/luxury_villa_banner.png');"></div>
+        <div class="landing-hero-content">
+            <h1>Discover your next <span>premium home</span></h1>
+            <p>PadPick is a premium real estate marketplace designed to connect tenants with verified, high-end rental homes. Browse verified listings, communicate directly with owners, and secure your perfect space.</p>
+            <div class="hero-buttons" id="hero-actions">
+                <a href="/frontend/login.html" class="btn btn-primary">
+                    Log In
+                </a>
+                <a href="/frontend/signup.html" class="btn btn-secondary">
+                    Create Account
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- About RentVibe Section -->
+    <section class="about-section">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2>What is <span>PadPick</span>?</h2>
+                <p>We believe finding a home should be an inspiring and smooth experience. PadPick is a trusted bridge connecting design-conscious tenants with premium, verified landlords.</p>
+                <p>No listings spam, no hidden fees, and absolute transparency. Whether you are looking for a modern downtown loft or a coastal beachside villa, we bring the best rental houses to your fingertips.</p>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        </div>
+                        <h3>Verified Homes</h3>
+                        <p>We review every property listing to guarantee safety and details accuracy.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        </div>
+                        <h3>Direct Contact</h3>
+                        <p>Connect with property owners directly to negotiate terms and view spaces.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-media">
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Beautiful rental lounge area">
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Testimonials Section -->
+    <section class="reviews-section">
+        <h2>What our users say about <span>PadPick</span></h2>
+        <p class="subtitle">Real feedback from premium renters and verified landlords</p>
+        <div class="reviews-grid" id="reviews-container">
+            <div style="grid-column: 1 / -1; color: var(--text-secondary); padding: 2rem;">Loading customer reviews...</div>
+        </div>
+    </section>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="/frontend/js/auth.js"></script>
+    <script>
+        // Update nav actions and hero CTAs on landing page depending on login state
+        async function updateLandingState() {
+            const currentUser = await getProfile();
+            const navActions = document.getElementById("nav-actions");
+            const heroActions = document.getElementById("hero-actions");
+            
+            if (currentUser) {
+                // Nav
+                navActions.innerHTML = `
+                    <div class="user-profile">
+                        <span class="user-name">Hello, ${currentUser.full_name || currentUser.email.split('@')[0]}</span>
+                        <a href="/frontend/dashboard.html" class="btn btn-primary" style="padding: 0.5rem 1rem;">Go to Dashboard</a>
+                        <button onclick="logoutUser()" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Log Out</button>
+                    </div>
+                `;
+                // Hero
+                if (heroActions) {
+                    heroActions.innerHTML = `
+                        <a href="/frontend/dashboard.html" class="btn btn-primary">
+                            Go to Dashboard
+                        </a>
+                    `;
+                }
+            } else {
+                navActions.innerHTML = `
+                    <a href="/frontend/login.html" class="nav-link">Log In</a>
+                    <a href="/frontend/signup.html" class="btn btn-primary">Sign Up</a>
+                `;
+                if (heroActions) {
+                    heroActions.innerHTML = `
+                        <a href="/frontend/login.html" class="btn btn-primary">Log In</a>
+                        <a href="/frontend/signup.html" class="btn btn-secondary">Create Account</a>
+                    `;
+                }
+            }
+        }
+
+        // Load and render user reviews
+        async function loadReviews() {
+            const reviewsContainer = document.getElementById("reviews-container");
+            if (!reviewsContainer) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/reviews`);
+                if (!response.ok) throw new Error("Could not load reviews");
+                
+                const reviews = await response.json();
+                if (reviews.length === 0) {
+                    reviewsContainer.innerHTML = `
+                        <div style="grid-column: 1 / -1; color: var(--text-muted); padding: 2rem; font-style: italic;">
+                            No reviews submitted yet. Be the first to review us in your profile!
+                        </div>
+                    `;
+                    return;
+                }
+                
+                reviewsContainer.innerHTML = "";
+                reviews.forEach(review => {
+                    const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
+                    const userName = review.user.full_name || review.user.email.split('@')[0];
+                    const initials = userName.substring(0, 2).toUpperCase();
+                    const dateStr = new Date(review.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+                    
+                    const avatarEl = review.user.avatar_url 
+                        ? `<img src="${API_BASE}${review.user.avatar_url}" class="review-avatar-img" alt="${userName}'s Avatar">`
+                        : `<div class="review-avatar-initials">${initials}</div>`;
+                        
+                    const card = document.createElement("div");
+                    card.className = "review-card";
+                    card.innerHTML = `
+                        <div>
+                            <div class="review-stars">${stars}</div>
+                            <p class="review-feedback">"${review.feedback}"</p>
+                        </div>
+                        <div class="review-user-info">
+                            ${avatarEl}
+                            <div>
+                                <div class="review-username">${userName}</div>
+                                <div class="review-date">${dateStr}</div>
+                            </div>
+                        </div>
+                    `;
+                    reviewsContainer.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error loading reviews:", error);
+                reviewsContainer.innerHTML = `
+                    <div style="grid-column: 1 / -1; color: #ef4444; padding: 2rem;">
+                        Failed to load testimonials.
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            updateLandingState();
+            loadReviews();
+        });
+    </script>
+</body>
+</html>
