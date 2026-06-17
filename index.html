@@ -74,6 +74,16 @@
     <section class="reviews-section">
         <h2>What our users say about <span>PadPick</span></h2>
         <p class="subtitle">Real feedback from premium renters and verified landlords</p>
+        
+        <!-- Average Rating Summary -->
+        <div id="reviews-summary-container" style="display: none; justify-content: center; align-items: center; gap: 1.5rem; margin-bottom: 2.5rem; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 1.2rem 2rem; border-radius: var(--radius-md); max-width: fit-content; margin-left: auto; margin-right: auto; box-shadow: var(--shadow-sm);">
+            <div style="font-size: 3rem; font-weight: 800; color: var(--primary-color); line-height: 1; text-shadow: 0 0 10px rgba(124, 58, 237, 0.3);" id="average-rating-value">0.0</div>
+            <div style="text-align: left;">
+                <div class="review-stars" style="font-size: 1.35rem; color: #fbbf24; letter-spacing: 2px; margin-bottom: 0.3rem;" id="average-rating-stars">☆☆☆☆☆</div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;" id="total-reviews-count">Based on 0 reviews</div>
+            </div>
+        </div>
+
         <div class="reviews-grid" id="reviews-container">
             <div style="grid-column: 1 / -1; color: var(--text-secondary); padding: 2rem;">Loading customer reviews...</div>
         </div>
@@ -140,15 +150,40 @@
                     return;
                 }
                 
+                // 1. Calculate and display average rating
+                const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
+                const averageRating = (totalRating / reviews.length).toFixed(1);
+                const fullStars = Math.round(averageRating);
+                const averageStars = "★".repeat(fullStars) + "☆".repeat(5 - fullStars);
+                
+                const summaryContainer = document.getElementById("reviews-summary-container");
+                const avgValueEl = document.getElementById("average-rating-value");
+                const avgStarsEl = document.getElementById("average-rating-stars");
+                const totalCountEl = document.getElementById("total-reviews-count");
+                
+                if (summaryContainer && avgValueEl && avgStarsEl && totalCountEl) {
+                    avgValueEl.textContent = averageRating;
+                    avgStarsEl.textContent = averageStars;
+                    totalCountEl.textContent = `Based on ${reviews.length} user review${reviews.length > 1 ? 's' : ''}`;
+                    summaryContainer.style.display = "flex";
+                }
+                
+                // 2. Render only 5 to 7 reviews (display up to 6 reviews)
+                const displayedReviews = reviews.slice(0, 6);
+                
                 reviewsContainer.innerHTML = "";
-                reviews.forEach(review => {
+                displayedReviews.forEach(review => {
                     const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
                     const userName = review.user.full_name || review.user.email.split('@')[0];
                     const initials = userName.substring(0, 2).toUpperCase();
                     const dateStr = new Date(review.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
                     
+                    const reviewAvatarSrc = (review.user.avatar_url && (review.user.avatar_url.startsWith("http://") || review.user.avatar_url.startsWith("https://")))
+                        ? review.user.avatar_url
+                        : `${API_BASE}${review.user.avatar_url}`;
+
                     const avatarEl = review.user.avatar_url 
-                        ? `<img src="${API_BASE}${review.user.avatar_url}" class="review-avatar-img" alt="${userName}'s Avatar">`
+                        ? `<img src="${reviewAvatarSrc}" class="review-avatar-img" alt="${userName}'s Avatar">`
                         : `<div class="review-avatar-initials">${initials}</div>`;
                         
                     const card = document.createElement("div");
