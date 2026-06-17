@@ -90,6 +90,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Hook up event listeners
     initEventListeners();
+
+    // Initialize Hash Routing
+    window.addEventListener("hashchange", handleHashRouting);
+    handleHashRouting();
 });
 
 // Update navigation actions based on auth state
@@ -873,39 +877,56 @@ function initSidebarMenu() {
         item.addEventListener("click", () => {
             const targetView = item.getAttribute("data-view");
             
-            // Remove active from all items
-            menuItems.forEach(mi => mi.classList.remove("active"));
-            
-            // Handle Filter tab specifically: it triggers the explore tab and focuses the filters panel
             if (targetView === "filter") {
-                const exploreMenu = document.querySelector('.menu-item[data-view="explore"]');
-                if (exploreMenu) exploreMenu.classList.add("active");
-                
-                switchDashboardView("explore");
-                
-                // Focus / scroll to filter container
-                const filterForm = document.getElementById("filter-form");
-                if (filterForm) {
-                    filterForm.scrollIntoView({ behavior: "smooth" });
-                    // Flash the filters container
-                    const container = document.querySelector(".filters-container");
-                    if (container) {
-                        container.style.borderColor = "var(--primary)";
-                        setTimeout(() => {
-                            container.style.borderColor = "var(--border-color)";
-                        }, 1000);
-                    }
-                }
-                return;
+                window.location.hash = "filter";
+            } else {
+                window.location.hash = targetView;
             }
-            
-            // Add active class to clicked item
-            item.classList.add("active");
-            
-            // Load and switch view panels
-            switchDashboardView(targetView);
         });
     });
+}
+
+function handleHashRouting() {
+    let viewName = window.location.hash.substring(1) || "explore";
+    const validViews = ["explore", "watchlist", "mylistings", "messages", "profile"];
+    
+    if (viewName === "filter") {
+        window.location.hash = "explore";
+        focusFilters();
+        return;
+    }
+    
+    if (!validViews.includes(viewName)) {
+        viewName = "explore";
+    }
+    
+    // Update active class in menu
+    const menuItems = document.querySelectorAll(".menu-item");
+    menuItems.forEach(mi => {
+        if (mi.getAttribute("data-view") === viewName) {
+            mi.classList.add("active");
+        } else {
+            mi.classList.remove("active");
+        }
+    });
+    
+    switchDashboardView(viewName);
+}
+
+function focusFilters() {
+    // Focus / scroll to filter container
+    const filterForm = document.getElementById("filter-form");
+    if (filterForm) {
+        filterForm.scrollIntoView({ behavior: "smooth" });
+        // Flash the filters container
+        const container = document.querySelector(".filters-container");
+        if (container) {
+            container.style.borderColor = "var(--primary)";
+            setTimeout(() => {
+                container.style.borderColor = "var(--border-color)";
+            }, 1000);
+        }
+    }
 }
 
 function switchDashboardView(viewName) {
@@ -1437,15 +1458,7 @@ function setCarouselSlide(index) {
 
 // Switch sidebar active state and open the message view programmatically
 function selectMessageTab() {
-    const menuItems = document.querySelectorAll(".menu-item");
-    menuItems.forEach(mi => {
-        if (mi.getAttribute("data-view") === "messages") {
-            mi.classList.add("active");
-        } else {
-            mi.classList.remove("active");
-        }
-    });
-    switchDashboardView("messages");
+    window.location.hash = "messages";
 }
 
 // Start chat conversation with owner
