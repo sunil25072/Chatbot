@@ -13,7 +13,8 @@ from .schemas import UserCreate, UserOut, Token, PropertyCreate, PropertyOut, Re
 from .auth import get_password_hash, verify_password, create_access_token, get_current_user
 
 # Create tables in the Neon PostgreSQL database on startup
-Base.metadata.create_all(bind=engine)
+if engine is not None:
+    Base.metadata.create_all(bind=engine)
 
 import cloudinary
 import cloudinary.uploader
