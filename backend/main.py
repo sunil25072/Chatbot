@@ -224,25 +224,21 @@ def upload_profile_image(
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="File must be an image")
         
-    avatar_dir = os.path.join(ROOT_DIR, "frontend", "images", "avatars")
-    os.makedirs(avatar_dir, exist_ok=True)
-    
-    file_ext = os.path.splitext(file.filename)[1]
-    if not file_ext:
-        file_ext = ".png"
-        
-    filename = f"user_{current_user.id}{file_ext}"
-    file_path = os.path.join(avatar_dir, filename)
-    
-    contents = file.file.read()
-    with open(file_path, "wb") as buffer:
-        buffer.write(contents)
-        
-    avatar_url = f"/frontend/images/avatars/{filename}"
-    current_user.avatar_url = avatar_url
-    db.commit()
-    db.refresh(current_user)
-    return current_user
+    try:
+        # Read file bytes to avoid stream seeking issues
+        contents = file.file.read()
+        # Upload raw file bytes directly to Cloudinary under 'padpick/avatars' folder
+        upload_result = cloudinary.uploader.upload(contents, folder="padpick/avatars")
+        secure_url = upload_result.get("secure_url")
+        if not secure_url:
+            raise HTTPException(status_code=500, detail="Cloudinary upload did not return secure URL")
+            
+        current_user.avatar_url = secure_url
+        db.commit()
+        db.refresh(current_user)
+        return current_user
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cloudinary upload failed: {str(e)}")
 
 @app.post("/api/reviews", response_model=ReviewOut, status_code=status.HTTP_201_CREATED)
 def create_review(
@@ -314,10 +310,16 @@ def send_message(
     if not receiver:
         raise HTTPException(status_code=404, detail="Receiver user not found")
         
+    resolved_property_id = msg_in.property_id
+    if resolved_property_id:
+        prop = db.query(Property).filter(Property.id == resolved_property_id).first()
+        if not prop:
+            resolved_property_id = None
+
     db_msg = Message(
         sender_id=current_user.id,
         receiver_id=msg_in.receiver_id,
-        property_id=msg_in.property_id,
+        property_id=resolved_property_id,
         text=msg_in.text
     )
     db.add(db_msg)

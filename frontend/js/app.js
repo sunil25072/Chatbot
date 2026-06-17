@@ -104,8 +104,11 @@ function updateNavbarState() {
     
     if (currentUser) {
         const displayName = currentUser.full_name || currentUser.email.split('@')[0];
+        const avatarSrc = (currentUser.avatar_url && (currentUser.avatar_url.startsWith("http://") || currentUser.avatar_url.startsWith("https://")))
+            ? currentUser.avatar_url
+            : `${API_BASE}${currentUser.avatar_url}`;
         const avatarHtml = currentUser.avatar_url 
-            ? `<img src="${API_BASE}${currentUser.avatar_url}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
+            ? `<img src="${avatarSrc}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
             : displayName.substring(0, 2).toUpperCase();
         
         // In top nav
@@ -346,8 +349,11 @@ async function renderProfile() {
     const userInitials = displayName.substring(0, 2).toUpperCase();
     const joinedDate = currentUser.created_at ? new Date(currentUser.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : "N/A";
     
+    const avatarSrc = (currentUser.avatar_url && (currentUser.avatar_url.startsWith("http://") || currentUser.avatar_url.startsWith("https://")))
+        ? currentUser.avatar_url
+        : `${API_BASE}${currentUser.avatar_url}`;
     const avatarContent = currentUser.avatar_url 
-        ? `<img src="${API_BASE}${currentUser.avatar_url}" alt="Profile Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
+        ? `<img src="${avatarSrc}" alt="Profile Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
         : userInitials;
         
     let reviewWidgetHtml = "";
