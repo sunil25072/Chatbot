@@ -4,33 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PadPick - Premium Rental Homes Marketplace</title>
-    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="./frontend/css/style.css">
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
-        <a href="/" class="logo">
+        <a href="./index.html" class="logo">
             PadPick<span>.</span>
         </a>
         
         <div class="nav-links" id="nav-actions">
             <!-- Dynamic Actions inserted here by JS -->
-            <a href="/frontend/login.html" class="nav-link">Log In</a>
-            <a href="/frontend/signup.html" class="btn btn-primary">Sign Up</a>
+            <a href="./frontend/login.html" class="nav-link">Log In</a>
+            <a href="./frontend/signup.html" class="btn btn-primary">Sign Up</a>
         </div>
     </nav>
-
+ 
     <!-- Landing Hero Section with Banner -->
     <header class="landing-hero">
-        <div class="landing-hero-bg" style="background-image: url('/frontend/images/luxury_villa_banner.png');"></div>
+        <div class="landing-hero-bg" style="background-image: url('./frontend/images/luxury_villa_banner.png');"></div>
         <div class="landing-hero-content">
             <h1>Discover your next <span>premium home</span></h1>
             <p>PadPick is a premium real estate marketplace designed to connect tenants with verified, high-end rental homes. Browse verified listings, communicate directly with owners, and secure your perfect space.</p>
             <div class="hero-buttons" id="hero-actions">
-                <a href="/frontend/login.html" class="btn btn-primary">
+                <a href="./frontend/login.html" class="btn btn-primary">
                     Log In
                 </a>
-                <a href="/frontend/signup.html" class="btn btn-secondary">
+                <a href="./frontend/signup.html" class="btn btn-secondary">
                     Create Account
                 </a>
             </div>
@@ -81,7 +81,7 @@
     <!-- Toast Notifications Container -->
     <div id="toast-container" class="toast-container"></div>
 
-    <script src="/frontend/js/auth.js"></script>
+    <script src="./frontend/js/auth.js"></script>
     <script>
         // Update nav actions and hero CTAs on landing page depending on login state
         async function updateLandingState() {
@@ -94,27 +94,27 @@
                 navActions.innerHTML = `
                     <div class="user-profile">
                         <span class="user-name">Hello, ${currentUser.full_name || currentUser.email.split('@')[0]}</span>
-                        <a href="/frontend/dashboard.html" class="btn btn-primary" style="padding: 0.5rem 1rem;">Go to Dashboard</a>
+                        <a href="./frontend/dashboard.html" class="btn btn-primary" style="padding: 0.5rem 1rem;">Go to Dashboard</a>
                         <button onclick="logoutUser()" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Log Out</button>
                     </div>
                 `;
                 // Hero
                 if (heroActions) {
                     heroActions.innerHTML = `
-                        <a href="/frontend/dashboard.html" class="btn btn-primary">
+                        <a href="./frontend/dashboard.html" class="btn btn-primary">
                             Go to Dashboard
                         </a>
                     `;
                 }
             } else {
                 navActions.innerHTML = `
-                    <a href="/frontend/login.html" class="nav-link">Log In</a>
-                    <a href="/frontend/signup.html" class="btn btn-primary">Sign Up</a>
+                    <a href="./frontend/login.html" class="nav-link">Log In</a>
+                    <a href="./frontend/signup.html" class="btn btn-primary">Sign Up</a>
                 `;
                 if (heroActions) {
                     heroActions.innerHTML = `
-                        <a href="/frontend/login.html" class="btn btn-primary">Log In</a>
-                        <a href="/frontend/signup.html" class="btn btn-secondary">Create Account</a>
+                        <a href="./frontend/login.html" class="btn btn-primary">Log In</a>
+                        <a href="./frontend/signup.html" class="btn btn-secondary">Create Account</a>
                     `;
                 }
             }

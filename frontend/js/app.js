@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!currentUser) {
         showToast("You must log in to view the dashboard.", "error");
         setTimeout(() => {
-            window.location.href = "/frontend/login.html";
+            window.location.href = "./login.html";
         }, 1200);
         return;
     }

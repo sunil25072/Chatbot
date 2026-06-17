@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Account — PadPick</title>
-  <link rel="stylesheet" href="/frontend/css/login_split.css">
+  <link rel="stylesheet" href="./css/login_split.css">
 </head>
 <body>
 
   <!-- LEFT: brand panel -->
   <div class="panel-left">
     <div class="panel-brand">
-      <a class="logo" href="/">Pad<span>Pick</span></a>
+      <a class="logo" href="../index.html">Pad<span>Pick</span></a>
 
       <div>
         <div class="brand-copy">
@@ -87,13 +87,13 @@
       </form>
 
       <p class="login-text">
-        Already have an account? <a href="/frontend/login.html">Login</a>
+        Already have an account? <a href="./login.html">Login</a>
       </p>
 
     </div>
   </div>
 
-  <script src="/frontend/js/auth.js"></script>
+  <script src="./js/auth.js"></script>
   <script>
     const form = document.getElementById("signupForm");
     const signupBtn = document.getElementById("signupBtn");
@@ -140,7 +140,7 @@
         message.innerText = "Account created successfully ✅";
 
         setTimeout(() => {
-          window.location.href = "/frontend/login.html";
+          window.location.href = "./login.html";
         }, 1200);
 
       } catch (err) {
